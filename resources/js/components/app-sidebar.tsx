@@ -11,7 +11,7 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
-import { index } from '@/routes/tasks';
+import { create, index } from '@/routes/tasks';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
@@ -26,6 +26,11 @@ const mainNavItems: NavItem[] = [
     {
         title: 'In Progress',
         href: index(),
+        icon: Folder,
+    },
+    {
+        title: 'Create Task',
+        href: create(),
         icon: Folder,
     },
 ];

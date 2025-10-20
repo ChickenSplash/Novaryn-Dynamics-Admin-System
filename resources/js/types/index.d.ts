@@ -64,3 +64,7 @@ export interface Task {
 export interface TaskResourceCollection {
     data: Task[];
 }
+
+export interface UserResourceCollection {
+    data: User[];
+}

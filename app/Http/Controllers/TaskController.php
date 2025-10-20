@@ -3,14 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\TaskResource;
+use App\Http\Resources\UserResource;
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class TaskController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display Everything.
      */
     public function dashboard(Request $request)
     {
@@ -21,6 +23,9 @@ class TaskController extends Controller
         ]);
     }
 
+    /**
+     * Display a listing of the resource.
+     */
     public function index(Request $request)
     {
         return Inertia::render('tasks/index', [
@@ -33,6 +38,9 @@ class TaskController extends Controller
         ]);
     }
 
+    /**
+     * Toggle the status of the specified resource.
+     */
     public function toggleStatus(Task $task)
     {
         $task->status = $task->status === 'In Progress' ? 'Completed' : 'In Progress';
@@ -46,7 +54,9 @@ class TaskController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('tasks/create', [
+            'users' => UserResource::collection(User::all()),
+        ]);
     }
 
     /**
@@ -54,7 +64,19 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'priority' => 'required|in:Low,Medium,High',
+            'due_date' => 'required|date',
+            'assigned_to' => 'required|exists:users,id',
+        ]);
+
+        $validated['created_by'] = $request->user()->id;
+
+        Task::create($validated);
+
+        return redirect()->route('tasks.index');
     }
 
     /**
