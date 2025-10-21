@@ -29,7 +29,7 @@ export function Calendar24({ date, setDate }: Calendar24Props) {
       {/* Date Picker */}
       <div className="flex flex-col gap-3">
         <Label htmlFor="date-picker" className="px-1">
-          Date
+          Due Date
         </Label>
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
