@@ -1,19 +1,19 @@
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
-import { UserResourceCollection, type BreadcrumbItem } from '@/types';
+import { Task, TaskResource, UserResourceCollection, type BreadcrumbItem } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
-import { format } from 'date-fns';
+import { format, parse } from 'date-fns';
 
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
-import { store } from '@/routes/tasks';
+import { useEffect, useState } from 'react';
+import { update } from '@/routes/tasks';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Calendar24 } from '@/components/calendar24';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -23,17 +23,24 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function TaskCreate({users} : {users: UserResourceCollection}) {
+export default function TaskUpdate({users, task} : {users: UserResourceCollection, task: TaskResource}) {
     const [date, setDate] = useState<Date | undefined>();
     const { post, setData, data, errors } = useForm({
-        title: '',
-        description: '',
-        priority: 'Medium',
-        due_date: '',
-        assigned_to: '',
+        title: task.data.title,
+        description: task.data.description ? task.data.description : '', // it doesnt like null
+        priority: task.data.priority,
+        due_date: task.data.due_date,
+        assigned_to: String(task.data.assigned_to.id),
+        _method: 'PUT',
     });
 
-    console.log(errors)
+    // Parse the due_date string into a Date object and set it on component mount
+    useEffect(() => {
+        if (task.data.due_date) {
+            const parsed = parse(task.data.due_date, 'yyyy-MM-dd HH:mm:ss', new Date());
+            setDate(parsed);
+        }
+    }, [task.data.due_date]);
 
     const handleDateChange = (selectedDate?: Date) => {
         setDate(selectedDate);
@@ -47,10 +54,9 @@ export default function TaskCreate({users} : {users: UserResourceCollection}) {
             <Head title="Dashboard" />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 <form
-                    method="POST"
                     onSubmit={(e) => {
                         e.preventDefault();
-                        post(store().url);
+                        post(update(task.data.id).url);
                     }}
                 >
                     {/* Row 1 — Title + Assign To */}
@@ -58,6 +64,7 @@ export default function TaskCreate({users} : {users: UserResourceCollection}) {
                         <div className="flex-1 mb-4 md:mb-0">
                             <Label htmlFor="title">Task Title</Label>
                             <Input
+                                value={data.title}
                                 id="title"
                                 onChange={(e) => setData('title', e.target.value)}
                                 className="mt-2 w-full"
@@ -65,7 +72,7 @@ export default function TaskCreate({users} : {users: UserResourceCollection}) {
                         </div>
                         <div className="flex-1">
                             <Label htmlFor="assigned_to">Assign To</Label>
-                            <Select onValueChange={(value) => setData('assigned_to', value)}>
+                            <Select value={data.assigned_to} onValueChange={(value) => setData('assigned_to', value)}>
                                 <SelectTrigger id="assigned_to" className="w-full mt-2">
                                     <SelectValue placeholder="Select a user" />
                                 </SelectTrigger>
@@ -84,6 +91,7 @@ export default function TaskCreate({users} : {users: UserResourceCollection}) {
                     <div className="mt-4">
                         <Label htmlFor="description">Task Description</Label>
                         <Textarea
+                            value={data.description}
                             id="description"
                             onChange={(e) => setData('description', e.target.value)}
                             className="mt-2 w-full"
@@ -96,7 +104,7 @@ export default function TaskCreate({users} : {users: UserResourceCollection}) {
                             <Label>Priority</Label>
                             <RadioGroup
                                 className="mt-2"
-                                defaultValue="Medium"
+                                value={data.priority}
                                 onValueChange={(value) => setData('priority', value)}
                             >
                                 <div className="flex items-center gap-3">
@@ -122,7 +130,7 @@ export default function TaskCreate({users} : {users: UserResourceCollection}) {
                     </div>
 
                     <Button type="submit" className="mt-6">
-                        Create Task
+                        Update Task
                     </Button>
                 </form>
                 {errors.title || errors.assigned_to || errors.due_date ? (

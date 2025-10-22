@@ -2,7 +2,7 @@ import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import { TaskResourceCollection, type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 
 import { TaskCard } from '@/components/TaskCard';
 
@@ -14,6 +14,9 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Dashboard({tasks}: {tasks: TaskResourceCollection}) {
+    const { errors } = usePage().props;
+
+    console.log(errors);
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />

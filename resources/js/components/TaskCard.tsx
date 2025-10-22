@@ -3,12 +3,21 @@ import { Card } from "@/components/ui/card";
 import { formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { router } from "@inertiajs/react";
-import { toggleStatus } from "@/routes/tasks";
+import { destroy, edit, toggleStatus } from "@/routes/tasks";
+import { DeleteConfirmation } from "./delete-confirmation";
 
 export function TaskCard({ task }: { task: Task }) {
-    const handleToggle = () => {
+    function requestToggleStatus() {
         router.patch(toggleStatus(task.id).url);
     };
+
+    function requestEditPage() {
+        router.get(edit(task.id).url);
+    };
+
+    function requestDeleteTask() {
+        router.delete(destroy(task.id).url);
+    }
 
     return (
         <li className="mb-4 p-4 border rounded-lg list-none">
@@ -27,9 +36,17 @@ export function TaskCard({ task }: { task: Task }) {
                 </div>
                 <div>{task.description}</div>
                 <div className="md:border-l md:pl-4">
-                    <Button variant="outline" size="sm" className="cursor-pointer" onClick={handleToggle}>
+                    <Button variant="outline" size="sm" className="cursor-pointer" onClick={requestToggleStatus}>
                         Complete Task
                     </Button>
+                    <Button variant="outline" size="sm" className="cursor-pointer" onClick={requestEditPage}>
+                        Manage Task
+                    </Button>
+                    <DeleteConfirmation onConfirm={requestDeleteTask} taskTitle={task.title}>
+                        <Button variant="outline" size="sm" className="cursor-pointer">
+                            Delete Task
+                        </Button>
+                    </DeleteConfirmation>
                 </div>
             </div>
         </li>

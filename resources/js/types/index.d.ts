@@ -27,6 +27,11 @@ export interface SharedData {
     quote: { message: string; author: string };
     auth: Auth;
     sidebarOpen: boolean;
+    flash: {
+        success?: string;
+        warning?: string;
+        info?: string;
+    };
     [key: string]: unknown;
 }
 
@@ -42,12 +47,16 @@ export interface User {
     [key: string]: unknown; // This allows for additional properties...
 }
 
+export interface UserResourceCollection {
+    data: User[];
+}
+
 export interface Task {
     id: number;
     title: string;
     description: string;
     status: string;
-    priority: 'low' | 'medium' | 'high';
+    priority: string;
     due_date: string | null;
     created_by: {
         id: number;
@@ -61,10 +70,10 @@ export interface Task {
     updated_at: string;
 }
 
-export interface TaskResourceCollection {
-    data: Task[];
+export interface TaskResource {
+    data: Task;
 }
 
-export interface UserResourceCollection {
-    data: User[];
+export interface TaskResourceCollection {
+    data: Task[];
 }

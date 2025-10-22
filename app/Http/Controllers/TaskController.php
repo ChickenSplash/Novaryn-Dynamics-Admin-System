@@ -41,12 +41,21 @@ class TaskController extends Controller
     /**
      * Toggle the status of the specified resource.
      */
-    public function toggleStatus(Task $task)
+    public function toggleStatus(Request $request, Task $task)
     {
-        $task->status = $task->status === 'In Progress' ? 'Completed' : 'In Progress';
-        $task->save();
+        if ($request->user()->cannot('update', $task)) {
+            return back()->withErrors(['error' => 'You are not authorized to perform this action.']);
+        }
 
-        return redirect()->back();
+        if ($task->status === 'In Progress') {
+            $task->status = 'Completed';
+            $task->save();
+            return redirect()->back()->with('success', 'Task marked as complete.');
+        } else {
+            $task->status = 'In Progress';
+            $task->save();
+            return redirect()->back()->with('success', 'Task marked as in progress.');
+        }
     }
  
     /**
@@ -76,7 +85,7 @@ class TaskController extends Controller
 
         Task::create($validated);
 
-        return redirect()->route('tasks.index');
+        return redirect()->route('tasks.index')->with('success', 'Task created successfully.');
     }
 
     /**
@@ -92,7 +101,10 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        //
+        return Inertia::render('tasks/edit', [
+            'users' => UserResource::collection(User::all()),
+            'task' => new TaskResource($task),
+        ]);
     }
 
     /**
@@ -100,7 +112,21 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        //
+        if ($request->user()->cannot('update', $task)) {
+            return back()->withErrors(['error' => 'You are not authorized to perform this action.']);
+        }
+
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'priority' => 'required|in:Low,Medium,High',
+            'due_date' => 'required|date',
+            'assigned_to' => 'required|exists:users,id',
+        ]);
+
+        $task->update($validated);
+
+        return redirect()->route('tasks.index')->with('success', 'Task updated successfully.');
     }
 
     /**
@@ -108,6 +134,12 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
+        if (request()->user()->cannot('delete', $task)) {
+            return back()->withErrors(['error' => 'You are not authorized to perform this action.']);
+        }
+
+        $task->delete();
+
+        return redirect()->route('tasks.index')->with('success', 'Task deleted successfully.');
     }
 }

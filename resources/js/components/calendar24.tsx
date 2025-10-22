@@ -13,7 +13,7 @@ interface Calendar24Props {
 
 export function Calendar24({ date, setDate }: Calendar24Props) {
   const [open, setOpen] = React.useState(false);
-  const [time, setTime] = React.useState("10:30:00"); // default time
+  const [time, setTime] = React.useState("09:00:00"); // default time
 
   // helper: combine date + time into one Date object
   const combineDateTime = (selectedDate?: Date, selectedTime?: string) => {
