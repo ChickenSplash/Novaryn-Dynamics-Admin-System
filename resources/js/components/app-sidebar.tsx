@@ -14,7 +14,7 @@ import { dashboard } from '@/routes';
 import { create, index } from '@/routes/tasks';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
+import { BookOpen, Folder, FolderGit2, Globe, Info, LayoutGrid, Plus } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -26,25 +26,23 @@ const mainNavItems: NavItem[] = [
     {
         title: 'In Progress',
         href: index(),
-        icon: Folder,
+        icon: FolderGit2,
     },
+];
+
+const adminNavItems: NavItem[] = [
     {
         title: 'Create Task',
         href: create(),
-        icon: Folder,
+        icon: Plus,
     },
 ];
 
 const footerNavItems: NavItem[] = [
     {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
+        title: 'Visit Website   ',
+        href: 'https://novaryndynamics.com',
+        icon: Globe,
     },
 ];
 
@@ -64,7 +62,8 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                <NavMain items={mainNavItems} heading={"View"}/>
+                <NavMain items={adminNavItems} heading={"Admin Controls"}/>
             </SidebarContent>
 
             <SidebarFooter>

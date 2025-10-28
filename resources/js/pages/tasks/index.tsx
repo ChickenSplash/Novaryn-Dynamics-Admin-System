@@ -17,7 +17,7 @@ export default function TaskIndex({tasks}: {tasks: TaskResourceCollection}) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
-            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+            <div className="w-full sm:w-lg xl:w-4xl m-auto flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 {/* <pre>{JSON.stringify(tasks, null, 2)}</pre> */}
                 <ul>
                     {tasks.data.map((task) => (

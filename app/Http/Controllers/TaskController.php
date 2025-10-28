@@ -16,10 +16,21 @@ class TaskController extends Controller
      */
     public function dashboard(Request $request)
     {
+        $query = Task::query();
+
+        if ($search = $request->input('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        $query->where('assigned_to', $request->user()->id)
+              ->orderBy('due_date', 'asc');
+
         return Inertia::render('dashboard', [
-            'tasks' => TaskResource::collection(
-                Task::where('assigned_to', $request->user()->id)->get()
-            ),
+            'tasks' => TaskResource::collection($query->get()),
+            'filters' => $request->only(['search']),
         ]);
     }
 
@@ -73,6 +84,8 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
+        $user = $request->user();
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -81,7 +94,12 @@ class TaskController extends Controller
             'assigned_to' => 'required|exists:users,id',
         ]);
 
-        $validated['created_by'] = $request->user()->id;
+        // Security check
+        if (! $user->is_admin && (int) $validated['assigned_to'] !== $user->id) {
+            return back()->withErrors(['error' => 'You are not allowed to assign tasks to other users.']);
+        }
+            
+        $validated['created_by'] = $user->id;
 
         Task::create($validated);
 

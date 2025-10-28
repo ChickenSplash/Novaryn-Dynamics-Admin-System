@@ -52,7 +52,7 @@ export default function TaskUpdate({users, task} : {users: UserResourceCollectio
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
-            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+            <div className="w-full sm:w-lg xl:w-4xl m-auto flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 <form
                     onSubmit={(e) => {
                         e.preventDefault();
