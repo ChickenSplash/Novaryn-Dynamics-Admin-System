@@ -26,7 +26,6 @@ export default function Dashboard({tasks}: {tasks: TaskResourceCollection}) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
             <div className="w-full sm:w-lg xl:w-4xl m-auto flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-                {/* <pre>{JSON.stringify(tasks, null, 2)}</pre> */}
                 <Label className="hover:bg-accent/50 flex items-start gap-3 rounded-lg border p-3 has-[[aria-checked=true]]:border-blue-600 has-[[aria-checked=true]]:bg-blue-50 dark:has-[[aria-checked=true]]:border-blue-900 dark:has-[[aria-checked=true]]:bg-blue-950">
                     <Checkbox
                         id="toggle-2"

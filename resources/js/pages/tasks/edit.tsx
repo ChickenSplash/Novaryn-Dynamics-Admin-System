@@ -1,8 +1,8 @@
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
-import { Task, TaskResource, UserResourceCollection, type BreadcrumbItem } from '@/types';
-import { Head, useForm } from '@inertiajs/react';
+import { SharedData, Task, TaskResource, UserResourceCollection, type BreadcrumbItem } from '@/types';
+import { Head, useForm, usePage } from '@inertiajs/react';
 import { format, parse } from 'date-fns';
 
 import { Input } from '@/components/ui/input';
@@ -15,6 +15,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Calendar24 } from '@/components/calendar24';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -25,6 +26,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function TaskUpdate({users, task} : {users: UserResourceCollection, task: TaskResource}) {
     const [date, setDate] = useState<Date | undefined>();
+    const { auth } = usePage<SharedData>().props;
     const { post, setData, data, errors } = useForm({
         title: task.data.title,
         description: task.data.description ? task.data.description : '', // it doesnt like null
@@ -71,19 +73,46 @@ export default function TaskUpdate({users, task} : {users: UserResourceCollectio
                             />
                         </div>
                         <div className="flex-1">
-                            <Label htmlFor="assigned_to">Assign To</Label>
-                            <Select value={data.assigned_to} onValueChange={(value) => setData('assigned_to', value)}>
-                                <SelectTrigger id="assigned_to" className="w-full mt-2">
-                                    <SelectValue placeholder="Select a user" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {users.data.map((user) => (
-                                        <SelectItem key={user.id} value={String(user.id)}>
-                                            {user.name}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
+                            {!auth.user.is_admin ? ( // if not admin, show tooltip, giving user feedback on why select is disabled
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <div>
+                                            <Label htmlFor="assigned_to">Assign To</Label>
+                                            <Select disabled={!auth.user.is_admin} value={data.assigned_to} onValueChange={(value) => setData('assigned_to', value)}>
+                                                <SelectTrigger id="assigned_to" className="w-full mt-2">
+                                                    <SelectValue placeholder="Select a user" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {users.data.map((user) => (
+                                                        <SelectItem key={user.id} value={String(user.id)}>
+                                                            {user.name}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>Cannot assign to other users without admin access.</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            ) : (
+                                <div>
+                                    <Label htmlFor="assigned_to">Assign To</Label>
+                                    <Select disabled={!auth.user.is_admin} value={data.assigned_to} onValueChange={(value) => setData('assigned_to', value)}>
+                                        <SelectTrigger id="assigned_to" className="w-full mt-2">
+                                            <SelectValue placeholder="Select a user" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {users.data.map((user) => (
+                                                <SelectItem key={user.id} value={String(user.id)}>
+                                                    {user.name}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            )}
                         </div>
                     </div>
 

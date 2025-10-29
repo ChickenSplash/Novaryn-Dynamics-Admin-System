@@ -8,8 +8,8 @@ export default function Search() {
     const { filters }: any = usePage().props;
 
     console.log('Current filters:', filters);
-    return (
-        <>
+    return ( 
+        <div>
             <Label htmlFor="search">Search</Label>
             <Input
                 defaultValue={filters.search ?? ''}
@@ -25,6 +25,6 @@ export default function Search() {
                 id="search"
                 className="mt-2 w-full"
             />
-        </>
+        </div>
     )
 }
