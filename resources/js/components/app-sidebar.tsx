@@ -35,9 +35,6 @@ const mainNavItems: NavItem[] = [
     },
 ];
 
-const adminNavItems: NavItem[] = [
-];
-
 const footerNavItems: NavItem[] = [
     {
         title: 'Visit Website   ',
@@ -63,7 +60,6 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <NavMain items={mainNavItems} heading={"View"}/>
-                {/* <NavMain items={adminNavItems} heading={"Admin Controls"}/> */}
             </SidebarContent>
 
             <SidebarFooter>
