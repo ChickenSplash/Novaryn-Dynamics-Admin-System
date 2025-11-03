@@ -4,6 +4,7 @@
 
 ## How to run
 - run `npm install` and `composer install`
+- run `php artisan migrate:fresh --seed`
 - run `composer run dev` to set up the dev environment
 
 ## Admin Login
