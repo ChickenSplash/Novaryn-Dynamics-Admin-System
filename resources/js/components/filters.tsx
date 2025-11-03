@@ -4,10 +4,11 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { debounce } from 'lodash';
+import { DashboardPageProps } from '@/types';
 
 export default function Filters() {
     const current = Object.fromEntries(new URLSearchParams(window.location.search))
-    const { filters }: any = usePage().props;
+    const { filters } = usePage<DashboardPageProps>().props;
 
     const handleToggle = (checked: boolean) => {
         applyFilter({

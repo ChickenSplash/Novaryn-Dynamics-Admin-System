@@ -83,3 +83,17 @@ export interface SearchParameters {
     search?: string;
     show_completed?: boolean;
 }
+
+export interface DashboardFilters {
+  search?: string;
+  show_completed?: number | string;
+}
+
+export interface DashboardPageProps extends SharedData {
+  tasks: TaskResourceCollection;
+  filters: DashboardFilters;
+}
+
+export interface PageProps extends SharedData {
+  [key: string]: unknown;
+}
