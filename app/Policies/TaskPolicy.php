@@ -37,6 +37,11 @@ class TaskPolicy
      */
     public function update(User $user, Task $task): bool
     {
+        // Admins can update any task
+        if ($user->is_admin) {
+            return true;
+        }
+
         return $task->assigned_to === $user->id;
     }
 
@@ -45,6 +50,11 @@ class TaskPolicy
      */
     public function delete(User $user, Task $task): bool
     {
+        // Admins can delete any task
+        if ($user->is_admin) {
+            return true;
+        }
+
         return $task->assigned_to === $user->id;
     }
 

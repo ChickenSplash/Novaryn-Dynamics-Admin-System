@@ -2,7 +2,7 @@ import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import { SharedData, Task, TaskResource, UserResourceCollection, type BreadcrumbItem } from '@/types';
-import { Head, useForm, usePage } from '@inertiajs/react';
+import { Head, router, useForm, usePage } from '@inertiajs/react';
 import { format, parse } from 'date-fns';
 
 import { Input } from '@/components/ui/input';
@@ -10,12 +10,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
-import { update } from '@/routes/tasks';
+import { destroy, update } from '@/routes/tasks';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Calendar24 } from '@/components/calendar24';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { DeleteConfirmation } from '@/components/delete-confirmation';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -51,6 +52,10 @@ export default function TaskUpdate({users, task} : {users: UserResourceCollectio
         }
     };
 
+    function requestDeleteTask() {
+        router.delete(destroy(task.data.id).url);
+    }
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
@@ -78,7 +83,7 @@ export default function TaskUpdate({users, task} : {users: UserResourceCollectio
                                     <TooltipTrigger asChild>
                                         <div>
                                             <Label htmlFor="assigned_to">Assign To</Label>
-                                            <Select disabled={!auth.user.is_admin} value={data.assigned_to} onValueChange={(value) => setData('assigned_to', value)}>
+                                            <Select disabled={true} value={data.assigned_to} onValueChange={(value) => setData('assigned_to', value)}>
                                                 <SelectTrigger id="assigned_to" className="w-full mt-2">
                                                     <SelectValue placeholder="Select a user" />
                                                 </SelectTrigger>
@@ -99,7 +104,7 @@ export default function TaskUpdate({users, task} : {users: UserResourceCollectio
                             ) : (
                                 <div>
                                     <Label htmlFor="assigned_to">Assign To</Label>
-                                    <Select disabled={!auth.user.is_admin} value={data.assigned_to} onValueChange={(value) => setData('assigned_to', value)}>
+                                    <Select disabled={false} value={data.assigned_to} onValueChange={(value) => setData('assigned_to', value)}>
                                         <SelectTrigger id="assigned_to" className="w-full mt-2">
                                             <SelectValue placeholder="Select a user" />
                                         </SelectTrigger>
@@ -157,10 +162,16 @@ export default function TaskUpdate({users, task} : {users: UserResourceCollectio
                             </div>
                         </div>
                     </div>
-
-                    <Button type="submit" className="mt-6">
-                        Update Task
-                    </Button>
+                    <div className="flex items-center gap-4 mt-6">
+                        <DeleteConfirmation onConfirm={requestDeleteTask} taskTitle={task.data.title}>
+                            <Button variant="destructive" className="cursor-pointer">
+                                Delete Task
+                            </Button>
+                        </DeleteConfirmation>
+                        <Button variant="secondary" type="submit">
+                            Update Task
+                        </Button>
+                    </div>
                 </form>
                 {errors.title || errors.assigned_to || errors.due_date ? (
                     <Alert variant="destructive" className="mt-6">

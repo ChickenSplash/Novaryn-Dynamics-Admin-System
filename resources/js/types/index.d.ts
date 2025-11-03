@@ -78,3 +78,8 @@ export interface TaskResource {
 export interface TaskResourceCollection {
     data: Task[];
 }
+
+export interface SearchParameters {
+    search?: string;
+    show_completed?: boolean;
+}

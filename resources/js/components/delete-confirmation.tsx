@@ -14,14 +14,14 @@ export function DeleteConfirmation({ onConfirm, children, taskTitle }: DeleteCon
         </AlertDialogTrigger>
         <AlertDialogContent>
             <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure you want to delete {taskTitle}?</AlertDialogTitle>
-            <AlertDialogDescription>
-                This will permanently delete the task. This action cannot be undone.
-            </AlertDialogDescription>
+                <AlertDialogTitle>Are you sure you want to delete {taskTitle}?</AlertDialogTitle>
+                <AlertDialogDescription>
+                    This will permanently delete the task. This action cannot be undone.
+                </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-             <AlertDialogAction onClick={onConfirm}>Continue</AlertDialogAction>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={onConfirm}>Delete</AlertDialogAction>
             </AlertDialogFooter>
         </AlertDialogContent>
         </AlertDialog>

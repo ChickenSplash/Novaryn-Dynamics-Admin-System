@@ -73,7 +73,7 @@ export default function TaskCreate({users} : {users: UserResourceCollection}) {
                                     <TooltipTrigger asChild>
                                         <div>
                                             <Label htmlFor="assigned_to">Assign To</Label>
-                                            <Select disabled={!auth.user.admin} value={data.assigned_to} onValueChange={(value) => setData('assigned_to', value)}>
+                                            <Select disabled={true} value={data.assigned_to} onValueChange={(value) => setData('assigned_to', value)}>
                                                 <SelectTrigger id="assigned_to" className="w-full mt-2">
                                                     <SelectValue />
                                                 </SelectTrigger>
@@ -94,7 +94,7 @@ export default function TaskCreate({users} : {users: UserResourceCollection}) {
                             ) : (
                                 <div>
                                     <Label htmlFor="assigned_to">Assign To</Label>
-                                    <Select disabled={!auth.user.admin} value={data.assigned_to} onValueChange={(value) => setData('assigned_to', value)}>
+                                    <Select disabled={false} value={data.assigned_to} onValueChange={(value) => setData('assigned_to', value)}>
                                         <SelectTrigger id="assigned_to" className="w-full mt-2">
                                             <SelectValue />
                                         </SelectTrigger>

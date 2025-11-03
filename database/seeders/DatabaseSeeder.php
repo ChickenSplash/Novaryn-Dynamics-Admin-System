@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
         
         $users = User::factory(10)->create();
 
-        Task::factory(30)->create([
+        Task::factory(200)->create([
             'created_by' => fn () => $admin->id,
             'assigned_to' => fn () => $users->random()->id,
         ]);

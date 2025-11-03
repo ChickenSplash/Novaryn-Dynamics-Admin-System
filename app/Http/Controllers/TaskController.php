@@ -16,8 +16,10 @@ class TaskController extends Controller
      */
     public function dashboard(Request $request)
     {
+        // Build the sql query from here
         $query = Task::query();
 
+        // Apply search filter
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
@@ -25,12 +27,23 @@ class TaskController extends Controller
             });
         }
 
-        $query->where('assigned_to', $request->user()->id)
-              ->orderBy('due_date', 'asc');
+        // Filter by completion status
+        if (!$request->boolean('show_completed')) {
+            $query->where('status', '!=', 'Completed');
+        }
+
+        if ($request->user()->is_admin) {
+            // Admins can see all tasks
+        } else {
+            // Regular users only see their own tasks
+            $query->where('assigned_to', $request->user()->id);
+        }
+
+        $query->orderBy('due_date', 'asc');
 
         return Inertia::render('dashboard', [
             'tasks' => TaskResource::collection($query->get()),
-            'filters' => $request->only(['search']),
+            'filters' => $request->only(['search', 'show_completed'])
         ]);
     }
 

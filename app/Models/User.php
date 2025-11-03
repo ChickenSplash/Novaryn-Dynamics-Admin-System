@@ -13,6 +13,10 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, TwoFactorAuthenticatable;
 
+    protected $casts = [
+        'is_admin' => 'boolean',
+    ];
+
     /**
      * The attributes that are mass assignable.
      *

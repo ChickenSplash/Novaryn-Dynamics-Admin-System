@@ -28,14 +28,14 @@ const mainNavItems: NavItem[] = [
         href: index(),
         icon: FolderGit2,
     },
-];
-
-const adminNavItems: NavItem[] = [
     {
         title: 'Create Task',
         href: create(),
         icon: Plus,
     },
+];
+
+const adminNavItems: NavItem[] = [
 ];
 
 const footerNavItems: NavItem[] = [
@@ -63,7 +63,7 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <NavMain items={mainNavItems} heading={"View"}/>
-                <NavMain items={adminNavItems} heading={"Admin Controls"}/>
+                {/* <NavMain items={adminNavItems} heading={"Admin Controls"}/> */}
             </SidebarContent>
 
             <SidebarFooter>
